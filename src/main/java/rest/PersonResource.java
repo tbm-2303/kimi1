@@ -17,7 +17,7 @@ import javax.ws.rs.core.MediaType;
 
 //Todo Remove or change relevant parts before ACTUAL use
 @Path("person")
-public class RenameMeResource {
+public class PersonResource {
 
     private static final EntityManagerFactory EMF = EMF_Creator.createEntityManagerFactory();
     private static final FacadeExample FACADE = FacadeExample.getFacadeExample(EMF);

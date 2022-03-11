@@ -18,7 +18,11 @@ public class PersonFacade {
     private PersonFacade() {
     }
 
-
+    /**
+     *
+     * @param _emf
+     * @return an instance of this facade class.
+     */
     public static PersonFacade getPersonFacade(EntityManagerFactory _emf) {
 
         if (instance == null) {
@@ -28,12 +32,10 @@ public class PersonFacade {
         return instance;
     }
 
-    private EntityManager getEntityManager() {
-        return emf.createEntityManager();
-    }
+
 
     public List<PersonDTO> getAllPersons() {
-        EntityManager em = getEntityManager();
+        EntityManager em = emf.createEntityManager();
         try {
             TypedQuery<Person> query = em.createQuery("SELECT p FROM Person p", Person.class);
             List<Person> persons = query.getResultList();
@@ -45,14 +47,15 @@ public class PersonFacade {
 
 
     public PersonDTO getPersonByID(long id) {
-        EntityManager em = getEntityManager();
+        EntityManager em = emf.createEntityManager();
         return new PersonDTO(em.find(Person.class, id));
     }
 
 
     public PersonDTO create(PersonDTO personDTO) {
+        EntityManager em = emf.createEntityManager();
         Person person = new Person(personDTO);
-        EntityManager em = getEntityManager();
+
         try {
             em.getTransaction().begin();
             em.persist(person);
@@ -61,5 +64,14 @@ public class PersonFacade {
             em.close();
         }
         return new PersonDTO(person);
+    }
+
+    public long getPersonCount() {
+        EntityManager em = emf.createEntityManager();
+        try {
+            return (long) em.createQuery("SELECT COUNT(p) FROM Person p").getSingleResult();
+        } finally {
+            em.close();
+        }
     }
 }
