@@ -26,12 +26,10 @@ public class TestResource {
 
 
 
-    @Path("count")
     @GET
     @Produces({MediaType.APPLICATION_JSON})
-    public String getPersonCount() {
-        return "{\"count\":" +personfacade.getPersonCount() + "}";
+    public String demo() {
+        return "{\"msg\":\"Hello World\"}";
     }
-
 
 }

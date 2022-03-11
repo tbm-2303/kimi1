@@ -36,13 +36,11 @@ public class FacadeExample {
         return instance;
     }
 
-    private EntityManager getEntityManager() {
-        return emf.createEntityManager();
-    }
+
     
     public RenameMeDTO create(RenameMeDTO rm){
         RenameMe rme = new RenameMe(rm.getDummyStr1(), rm.getDummyStr2());
-        EntityManager em = getEntityManager();
+        EntityManager em = emf.createEntityManager();
         try {
             em.getTransaction().begin();
             em.persist(rme);
@@ -60,12 +58,11 @@ public class FacadeExample {
         return new RenameMeDTO(rm);
     }
     
-    //TODO Remove/Change this before use
-    public long getRenameMeCount(){
-        EntityManager em = getEntityManager();
+
+    public long getPersonCount(){
+        EntityManager em = emf.createEntityManager();
         try{
-            long renameMeCount = (long)em.createQuery("SELECT COUNT(r) FROM RenameMe r").getSingleResult();
-            return renameMeCount;
+            return (long)em.createQuery("SELECT COUNT(p) FROM Person p").getSingleResult();
         }finally{  
             em.close();
         }
