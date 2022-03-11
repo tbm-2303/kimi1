@@ -1,0 +1,22 @@
+
+GET http://ca1.giggga.dk/kimi1/api/perso
+
+
+
+###
+
+DELETE http://localhost:8080/getRequests_war_exploded/api/customer/30
+
+###
+
+PUT http://localhost:8080/getRequests_war_exploded/api/customer/30
+Content-Type: application/json
+
+{
+  "first": "Jens",
+  "last": "Johannson"
+}
+
+###
+
+GET http://localhost:8080/getRequests_war_exploded/api/customer/all
