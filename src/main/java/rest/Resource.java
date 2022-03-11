@@ -14,7 +14,7 @@ import javax.ws.rs.core.Response;
 import java.util.List;
 
 
-@Path("person")
+@Path("person2")
 public class Resource {
     private static final EntityManagerFactory EMF = EMF_Creator.createEntityManagerFactory();
     private static final PersonFacade personFacade = PersonFacade.getPersonFacade(EMF);
