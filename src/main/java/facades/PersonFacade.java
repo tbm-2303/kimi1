@@ -1,8 +1,6 @@
 package facades;
 
-import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
-import dtos.HobbyDTO;
 import dtos.PersonDTO;
 import dtos.RenameMeDTO;
 import entities.Person;
@@ -23,8 +21,6 @@ public class PersonFacade {
     //Private Constructor to ensure Singleton
     private PersonFacade() {
     }
-
-
     /**
      * @param _emf
      * @return an instance of this facade class.
@@ -39,14 +35,9 @@ public class PersonFacade {
 
     public PersonDTO getPersonByID(long id) { //throws RenameMeNotFoundException {
         EntityManager em = emf.createEntityManager();
-        try {
-            Person Person = em.find(Person.class, id);
-            return new PersonDTO(Person);
-        } finally {
-            em.close();
-        }
+        Person Person = em.find(Person.class, id);
+        return new PersonDTO(Person);
     }
-
 
     public long getPersonCount() {
         EntityManager em = emf.createEntityManager();
@@ -63,15 +54,6 @@ public class PersonFacade {
         jsonObject.addProperty("email", personDTO.getEmail());
         jsonObject.addProperty("firstName", personDTO.getFirstName());
         jsonObject.addProperty("lastName", personDTO.getLastName());
-        JsonArray hobbyArray = new JsonArray();
-        for (HobbyDTO h : personDTO.getHobbies_dto()) {
-            JsonObject hobby_json = new JsonObject();
-            hobby_json.addProperty("hobbyId", h.getId());
-            hobby_json.addProperty("name", h.getName());
-            hobby_json.addProperty("description", h.getDescription());
-            hobbyArray.add(hobby_json);
-        }
-        jsonObject.add("hobby", hobbyArray);
         return jsonObject;
     }
 
@@ -104,17 +86,21 @@ public class PersonFacade {
     }
 
 
-    public List<RenameMeDTO> getAll() {
+    public List<PersonDTO> getAll() {
         EntityManager em = emf.createEntityManager();
-        TypedQuery<RenameMe> query = em.createQuery("SELECT r FROM RenameMe r", RenameMe.class);
-        List<RenameMe> rms = query.getResultList();
-        return RenameMeDTO.getDtos(rms);
+        TypedQuery<Person> query = em.createQuery("SELECT p FROM Person p", Person.class);
+        List<Person> personList = query.getResultList();
+        return PersonDTO.convertToDTO(personList);
     }
 
     public static void main(String[] args) {
         emf = EMF_Creator.createEntityManagerFactory();
-        PersonFacade fe = getPersonFacade(emf);
-        fe.getAll().forEach(dto -> System.out.println(dto));
+        PersonFacade pf = getPersonFacade(emf);
+        PersonDTO pdto = pf.getPersonByID(4);
+        System.out.println("check getPersonByID(1) :"+pdto.toString());
+        JsonObject jsonObject = pf.getPersonInfo(pdto);
+        System.out.println(jsonObject.get("personId"));
+        System.out.println(jsonObject.get("email"));
     }
 
 }

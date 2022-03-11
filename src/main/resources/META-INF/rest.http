@@ -6,3 +6,9 @@ Content-Type: application/json
   "firstName": "testFirstName",
   "lastName": "testLastName"
 }
+###
+
+GET http://localhost:8080/2_war_exploded/api/person/info/4
+Content-Type: application/json
+
+###

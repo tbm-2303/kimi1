@@ -34,7 +34,7 @@ public class PersonDTO {
             this.hobbies_dto.add(new HobbyDTO(h));
         }
     }
-    public static List<PersonDTO> getDtos(List<Person> persons) {
+    public static List<PersonDTO> convertToDTO(List<Person> persons) {
         List<PersonDTO> pDtos = new ArrayList<>();
         persons.forEach(p -> pDtos.add(new PersonDTO(p)));
         return pDtos;

@@ -13,6 +13,7 @@ import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.util.ArrayList;
+import java.util.List;
 
 //Todo Remove or change relevant parts before ACTUAL use
 @Path("person")
@@ -43,6 +44,18 @@ public class PersonResource {
         return "{\"count\":" + test + "}";
     }
 
+    @Path("all")
+    @GET
+    @Produces({MediaType.APPLICATION_JSON})
+    public String getAllPersons() {
+    List<PersonDTO> personList = FACADE.getAll();
+    StringBuilder stringBuilder = new StringBuilder();
+        for (PersonDTO x: personList) {
+            stringBuilder.append(x.toString()).append("\n");
+        }
+        return stringBuilder.toString();
+    }
+
     @Path("addperson")
     @POST
     @Produces({MediaType.APPLICATION_JSON})
@@ -61,7 +74,20 @@ public class PersonResource {
                 .entity(GSON.toJson(persistedPerson.toJson()))
                 .build();
     }
+
 /*
+// Get all info from a person by person ID
+    @Path("info{id}")
+    @GET
+    @Produces({MediaType.APPLICATION_JSON})
+    //@Consumes({MediaType.APPLICATION_JSON})
+    public Response getInfoId(@PathParam("id") long id) {
+        PersonDTO personDTO = FACADE.getPersonByID(id);
+        return Response
+                .ok("SUCCESS")
+                .entity(GSON.toJson(FACADE.getPersonInfo(personDTO)))
+                .build();
+    }
     // Get all info from a person by person ID
     @Path("info{id}")
     @GET
