@@ -9,8 +9,9 @@ import java.util.List;
 
 @Entity
 @Table(name = "person")
-public class Person implements Serializable {
-    private static final long serialVersionUID = 1L;
+@NamedQuery(name = "Person.deleteAllRows", query = "DELETE from Person")
+public class Person {
+
 
     @Id
     @Column(name = "id", nullable = false)
@@ -33,34 +34,22 @@ public class Person implements Serializable {
             @JoinColumn(name = "person_id"),
             inverseJoinColumns =
             @JoinColumn(name = "hobby_id"))
-    private List<Hobby> hobbies;
+    private List<Hobby> hobbies = new ArrayList<>();
 
     public Person() {
     }
 
-    public Person(String firstName, String lastName, String email) {
+    public Person(String email, String firstName, String lastName) {
+        this.email = email;
         this.firstName = firstName;
         this.lastName = lastName;
-        this.email = email;
-        this.hobbies = new ArrayList<>();
     }
 
 
-    public Person dtoPerson(PersonDTO dto) {
-        this.firstName = dto.getFirstName();
-        this.lastName = dto.getLastName();
-        this.email = dto.getEmail();
-        return this;
-    }
-
-    public Person(PersonDTO personDTO) {
-        if (personDTO.getId() != null) {
-            this.id = personDTO.getId();
-        }
-        this.firstName = personDTO.getFirstName();
-        this.lastName = personDTO.getLastName();
-        this.email = personDTO.getEmail();
-        this.hobbies = new Hobby().toDtos(personDTO.getHobbies());
+    public Person(PersonDTO pDTO) {
+        this.email = pDTO.getEmail();
+        this.firstName = pDTO.getFirstName();
+        this.lastName = pDTO.getLastName();
     }
 
 
@@ -107,8 +96,7 @@ public class Person implements Serializable {
 
     public void addHobby(Hobby hobby) {
         this.hobbies.add(hobby);
-        if (hobby != null) {
-            hobby.addPersons(this);
-        }
+        hobby.addPersons(this);
+
     }
 }

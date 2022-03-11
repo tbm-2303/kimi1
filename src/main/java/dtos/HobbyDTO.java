@@ -1,7 +1,6 @@
 package dtos;
 
 import entities.Hobby;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -9,7 +8,7 @@ public class HobbyDTO {
     private Long id;
     private String name;
     private String description;
-    private List<PersonDTO> persons;
+
 
 
     public HobbyDTO(Hobby hobby) {
@@ -20,10 +19,10 @@ public class HobbyDTO {
         this.description = hobby.getDescription();
     }
 
-    public static List<HobbyDTO> getDtos(List<Hobby> p) {
-        List<HobbyDTO> pdtos = new ArrayList();
-        p.forEach(rm -> pdtos.add(new HobbyDTO(rm)));
-        return pdtos;
+    public static List<HobbyDTO> getDtos(List<Hobby> hobbies) {
+        List<HobbyDTO> hobbies_dto = new ArrayList();
+        hobbies.forEach(rm -> hobbies_dto.add(new HobbyDTO(rm)));
+        return hobbies_dto;
     }
 
     public Long getId() {
@@ -50,11 +49,7 @@ public class HobbyDTO {
         this.description = description;
     }
 
-    public List<PersonDTO> getPersons() {
-        return persons;
-    }
 
-    public void setPersons(List<PersonDTO> persons) {
-        this.persons = persons;
-    }
+
+
 }

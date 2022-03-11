@@ -11,6 +11,7 @@ import java.util.List;
 public class Hobby {
 
     @Id
+    @Column(name = "id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
@@ -21,37 +22,24 @@ public class Hobby {
     private String description;
 
     @ManyToMany(mappedBy = "hobbies")
-    private List<Person> persons;
+    private List<Person> persons = new ArrayList<>();
 
     public Hobby() {
     }
 
 
-    public Hobby(String name, String description, List<Person> persons) {
-        this.name = name;
-        this.description = description;
-        this.persons = persons;
-    }
-
     public Hobby(String name, String description) {
         this.name = name;
         this.description = description;
-        this.persons = new ArrayList<>();
     }
 
-    public Hobby(HobbyDTO hDTO) {
-        if (hDTO.getId() != null) {
-            this.id = hDTO.getId();
-        }
-        this.name = hDTO.getName();
-        this.description = hDTO.getDescription();
-        this.persons = new ArrayList<>();
+    public Hobby(HobbyDTO hobbyDTO) {
+        this.name = hobbyDTO.getName();
+        this.description = hobbyDTO.getDescription();
     }
 
-
-    public List<Person> addPersons(Person person) {
+    public void addPersons(Person person) {
         this.persons.add(person);
-        return persons;
     }
 
     public String getName() {
@@ -70,6 +58,14 @@ public class Hobby {
         this.description = description;
     }
 
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
     public List<Person> getPersons() {
         return persons;
     }
@@ -78,20 +74,13 @@ public class Hobby {
         this.persons = persons;
     }
 
-    public List<Hobby> toDtos(List<HobbyDTO> hobbies) {
-        List<Hobby> hobbyList = new ArrayList();
-        for (HobbyDTO pDTO : hobbies) {
-            hobbyList.add(new Hobby(pDTO));
-        }
-        return hobbyList;
-
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public Long getId() {
-        return id;
+    @Override
+    public String toString() {
+        return "Hobby{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", description='" + description + '\'' +
+                ", persons=" + persons +
+                '}';
     }
 }

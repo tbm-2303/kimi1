@@ -1,22 +1,8 @@
-
-GET http://ca1.giggga.dk/kimi1/api/person
-
-
-
-###
-
-DELETE http://localhost:8080/getRequests_war_exploded/api/customer/30
-
-###
-
-PUT http://localhost:8080/getRequests_war_exploded/api/customer/30
+POST http://localhost:8080/2_war_exploded/api/person/addperson
 Content-Type: application/json
 
 {
-  "first": "Jens",
-  "last": "Johannson"
+  "email": "test@Email",
+  "firstName": "testFirstName",
+  "lastName": "testLastName"
 }
-
-###
-
-GET http://localhost:8080/getRequests_war_exploded/api/customer/all
