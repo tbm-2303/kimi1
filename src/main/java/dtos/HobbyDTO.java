@@ -19,10 +19,10 @@ public class HobbyDTO {
         this.description = hobby.getDescription();
     }
 
-    public static List<HobbyDTO> getDtos(List<Hobby> hobbies) {
-        List<HobbyDTO> hobbies_dto = new ArrayList();
-        hobbies.forEach(rm -> hobbies_dto.add(new HobbyDTO(rm)));
-        return hobbies_dto;
+    public static List<HobbyDTO> converToDTO(List<Hobby> hobbies) {
+        List<HobbyDTO> hobbyList_dto = new ArrayList();
+        hobbies.forEach(rm -> hobbyList_dto.add(new HobbyDTO(rm)));
+        return hobbyList_dto;
     }
 
     public Long getId() {

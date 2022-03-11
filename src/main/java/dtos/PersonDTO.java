@@ -35,9 +35,9 @@ public class PersonDTO {
         }
     }
     public static List<PersonDTO> convertToDTO(List<Person> persons) {
-        List<PersonDTO> pDtos = new ArrayList<>();
-        persons.forEach(p -> pDtos.add(new PersonDTO(p)));
-        return pDtos;
+        List<PersonDTO> personDTOS = new ArrayList<>();
+        persons.forEach(p -> personDTOS.add(new PersonDTO(p)));
+        return personDTOS;
     }
 
     public Long getId() {
