@@ -111,6 +111,12 @@ public class PersonFacade {
     public static void main(String[] args) {
         emf = EMF_Creator.createEntityManagerFactory();
         PersonFacade pf = getPersonFacade(emf);
+        List<PersonDTO> list = pf.getAll();
+        System.out.println(list);
+        //create addressdto
+        //create persondto
+        //test the adding methods(addperson + add address)
+        //persist et par test persons
     }
 
 }
