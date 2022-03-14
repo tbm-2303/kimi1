@@ -21,7 +21,7 @@ public class Hobby {
     @Column(name = "description")
     private String description;
 
-    @ManyToMany(mappedBy = "hobbies")
+    @ManyToMany(mappedBy = "hobbylist")
     private List<Person> persons = new ArrayList<>();
 
     public Hobby() {

@@ -2,13 +2,23 @@ POST http://localhost:8080/2_war_exploded/api/person/addperson
 Content-Type: application/json
 
 {
-  "email": "test@Email",
-  "firstName": "testFirstName",
-  "lastName": "testLastName"
+  "email": "jannik@hotmail.com",
+  "firstName": "jannik",
+  "lastName": "sylvester"
 }
 ###
 
-GET http://localhost:8080/2_war_exploded/api/person/info/4
+POST http://localhost:8080/2_war_exploded/api/person/addpersontest
 Content-Type: application/json
+
+{
+  "email": "email",
+  "firstName": "firstName",
+  "lastName": "lastName",
+  "street": "street",
+  "additionalInfo": "additionalInfo",
+  "zipCode": "zipCode",
+  "city": "city"
+}
 
 ###

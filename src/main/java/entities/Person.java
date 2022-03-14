@@ -3,7 +3,6 @@ package entities;
 
 import dtos.PersonDTO;
 import javax.persistence.*;
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -34,7 +33,16 @@ public class Person {
             @JoinColumn(name = "person_id"),
             inverseJoinColumns =
             @JoinColumn(name = "hobby_id"))
-    private List<Hobby> hobbies = new ArrayList<>();
+    private List<Hobby> hobbylist = new ArrayList<>();
+
+    @OneToMany(mappedBy = "person")
+    private List<Phone> phoneList = new ArrayList<>();
+
+    @ManyToOne
+    @JoinColumn(name = "address_id")
+    private Address address;
+
+
 
     public Person() {
     }
@@ -52,13 +60,28 @@ public class Person {
         this.lastName = pDTO.getLastName();
     }
 
-
-    public List<Hobby> getHobbies() {
-        return hobbies;
+    public List<Phone> getPhoneList() {
+        return phoneList;
     }
 
-    public void setHobbies(List<Hobby> hobbies) {
-        this.hobbies = hobbies;
+    public void setPhoneList(List<Phone> phoneList) {
+        this.phoneList = phoneList;
+    }
+
+    public Address getAddress() {
+        return address;
+    }
+
+    public void setAddress(Address address) {
+        this.address = address;
+    }
+
+    public List<Hobby> getHobbylist() {
+        return hobbylist;
+    }
+
+    public void setHobbylist(List<Hobby> hobbies) {
+        this.hobbylist = hobbies;
     }
 
     public String getFirstName() {
@@ -95,8 +118,12 @@ public class Person {
     }
 
     public void addHobby(Hobby hobby) {
-        this.hobbies.add(hobby);
+        this.hobbylist.add(hobby);
         hobby.addPersons(this);
-
     }
+    public void addPhone(Phone phone){
+        this.phoneList.add(phone);
+        phone.setPerson(this);
+    }
+
 }

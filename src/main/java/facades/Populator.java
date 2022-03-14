@@ -7,9 +7,14 @@ package facades;
 
 import dtos.PersonDTO;
 import dtos.RenameMeDTO;
+import entities.CityInfo;
 import entities.Person;
 import entities.RenameMe;
+
+import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
+import javax.persistence.Persistence;
+
 import utils.EMF_Creator;
 
 /**
@@ -18,6 +23,19 @@ import utils.EMF_Creator;
  */
 public class Populator {
     public static void populate(){
+        EntityManagerFactory emf = Persistence.createEntityManagerFactory("pu");
+        EntityManager em = emf.createEntityManager();
+        CityInfo cityInfo = new CityInfo("1234", "Aarhus");
+
+
+
+        try {
+            em.getTransaction().begin();
+            em.persist(cityInfo);
+            em.getTransaction().commit();
+        } finally {
+            em.close();
+        }
     }
     
     public static void main(String[] args) {

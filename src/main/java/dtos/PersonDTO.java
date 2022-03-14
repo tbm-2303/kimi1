@@ -1,9 +1,9 @@
 package dtos;
 
-import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import entities.Hobby;
 import entities.Person;
+import entities.Phone;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -13,14 +13,16 @@ public class PersonDTO {
     private String email;
     private String firstName;
     private String lastName;
-    private List<HobbyDTO> hobbies_dto = new ArrayList<>();
+    private List<HobbyDTO> hobbiesDTOS = new ArrayList<>();
+    private List<Phone> phoneList = new ArrayList<>();
+    private AddressDTO addressDTO;
 
 
-    public PersonDTO(String email, String firstName, String lastName) {
+    public PersonDTO(String email, String firstName, String lastName, AddressDTO addressDTO) {
         this.email = email;
         this.firstName = firstName;
         this.lastName = lastName;
-
+        this.addressDTO = addressDTO;
     }
 
     public PersonDTO(Person person) {
@@ -30,14 +32,37 @@ public class PersonDTO {
         this.email = person.getEmail();
         this.firstName = person.getFirstName();
         this.lastName = person.getLastName();
-        for (Hobby h : person.getHobbies()) {
-            this.hobbies_dto.add(new HobbyDTO(h));
+        this.addressDTO = new AddressDTO(person.getAddress());
+        for (Hobby h : person.getHobbylist()) {
+            this.hobbiesDTOS.add(new HobbyDTO(h));
         }
     }
+
     public static List<PersonDTO> convertToDTO(List<Person> persons) {
         List<PersonDTO> personDTOS = new ArrayList<>();
         persons.forEach(p -> personDTOS.add(new PersonDTO(p)));
         return personDTOS;
+    }
+
+
+    public void setHobbiesDTOS(List<HobbyDTO> hobbiesDTOS) {
+        this.hobbiesDTOS = hobbiesDTOS;
+    }
+
+    public List<Phone> getPhoneList() {
+        return phoneList;
+    }
+
+    public void setPhoneList(List<Phone> phoneList) {
+        this.phoneList = phoneList;
+    }
+
+    public AddressDTO getAddressDTO() {
+        return addressDTO;
+    }
+
+    public void setAddressDTO(AddressDTO addressDTO) {
+        this.addressDTO = addressDTO;
     }
 
     public Long getId() {
@@ -72,24 +97,22 @@ public class PersonDTO {
         this.email = email;
     }
 
-    public List<HobbyDTO> getHobbies_dto() {
-        return hobbies_dto;
+    public List<HobbyDTO> getHobbiesDTOS() {
+        return hobbiesDTOS;
     }
 
     public void setHobbies(List<HobbyDTO> hobbies) {
-        this.hobbies_dto = hobbies;
+        this.hobbiesDTOS = hobbies;
     }
 
     @Override
     public String toString() {
-        final StringBuilder sb = new StringBuilder("PersonDTO{");
-        sb.append("id=").append(id);
-        sb.append(", firstName='").append(firstName).append('\'');
-        sb.append(", lastName='").append(lastName).append('\'');
-        sb.append(", email='").append(email).append('\'');
-        sb.append(", hobbies=").append(hobbies_dto);
-        sb.append('}');
-        return sb.toString();
+        return "PersonDTO{" + "id=" + id +
+                ", firstName='" + firstName + '\'' +
+                ", lastName='" + lastName + '\'' +
+                ", email='" + email + '\'' +
+                ", hobbies=" + hobbiesDTOS +
+                '}';
     }
     public JsonObject toJson() {
         JsonObject jsonObject = new JsonObject();
@@ -97,6 +120,12 @@ public class PersonDTO {
         jsonObject.addProperty("email", getEmail());
         jsonObject.addProperty("firstName", getFirstName());
         jsonObject.addProperty("lastName", getLastName());
+        jsonObject.addProperty("addressId", getAddressDTO().getId());
+        jsonObject.addProperty("street", getAddressDTO().getStreet());
+        jsonObject.addProperty("additionalInfo", getAddressDTO().getAdditionalInfo());
+        jsonObject.addProperty("cityInfoId", getAddressDTO().getCityInfoDTO().getId());
+        jsonObject.addProperty("zipCode", getAddressDTO().getCityInfoDTO().getZipCode());
+        jsonObject.addProperty("city", getAddressDTO().getCityInfoDTO().getCity());
         return jsonObject;
     }
 }
