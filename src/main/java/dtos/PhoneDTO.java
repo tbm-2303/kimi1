@@ -26,10 +26,6 @@ public class PhoneDTO {
 
     public static List<PhoneDTO> convertToDTO(List<Phone> phones) {
         List<PhoneDTO> phoneDTOS = new ArrayList<>();
-
-        //for (Phone p: phones) { apparently using stupid functional expression is better. but is like my old for each things :(
-         //   phoneDTOS.add(new PhoneDTO(p));
-      //  }
         phones.forEach(p -> phoneDTOS.add(new PhoneDTO(p)));
         return phoneDTOS;
     }

@@ -1,14 +1,8 @@
 package facades;
 
 import com.google.gson.JsonObject;
-import dtos.AddressDTO;
-import dtos.CityInfoDTO;
-import dtos.PersonDTO;
-import dtos.RenameMeDTO;
-import entities.Address;
-import entities.CityInfo;
-import entities.Person;
-import entities.RenameMe;
+import dtos.*;
+import entities.*;
 
 import java.util.List;
 import javax.persistence.EntityManager;
@@ -41,8 +35,8 @@ public class PersonFacade {
 
     public PersonDTO getPersonByID(long id) { //throws RenameMeNotFoundException {
         EntityManager em = emf.createEntityManager();
-        Person Person = em.find(Person.class, id);
-        return new PersonDTO(Person);
+        Person person = em.find(Person.class, id);
+        return new PersonDTO(person);
     }
 
     public long getPersonCount() {
@@ -55,24 +49,67 @@ public class PersonFacade {
     }
 
 
+    public CityInfo searchZips(String zipcode, EntityManager em) {
+        if (!zipcode.equals("")) {
+            TypedQuery<CityInfo> query = em.createQuery("SELECT c FROM CityInfo c where c.zipCode = :zipcode", CityInfo.class);
+            query.setParameter("zipcode", zipcode);
+            List<CityInfo> c = query.getResultList();
+            return c.get(0);
+        }
+        return null;
+    }
+    public void linkHobbyPerson(PersonDTO p, HobbyDTO h){
+        EntityManager em = emf.createEntityManager();
+        Person person = new Person(p);
+        Hobby hobby = new Hobby(h);
+        person.addHobby(hobby);
+        try {
+            em.getTransaction().begin();
+            em.persist(person);
+            em.getTransaction().commit();
+        } finally {
+            em.close();
+        }
+    }
+
+    public HobbyDTO createHobby(HobbyDTO hobbyDTO){
+        EntityManager em = emf.createEntityManager();
+        Hobby hobby = new Hobby(hobbyDTO);
+        try {
+            em.getTransaction().begin();
+            em.persist(hobby);
+            em.getTransaction().commit();
+        } finally {
+            em.close();
+        }
+        return new HobbyDTO(hobby);
+    }
 
     public PersonDTO create(PersonDTO personDTO) {
+        EntityManager em = emf.createEntityManager();
         CityInfo cityInfo = new CityInfo(personDTO.getAddressDTO().getCityInfoDTO());
         Address address = new Address(personDTO.getAddressDTO());
         Person person = new Person(personDTO);
         cityInfo.addAddress(address);
         address.addPerson(person);
-        EntityManager em = emf.createEntityManager();
+        for (PhoneDTO phoneDTO : personDTO.getPhoneList()) {
+            person.addPhone(new Phone(phoneDTO));
+        }
         try {
             em.getTransaction().begin();
             em.persist(cityInfo);
             em.persist(address);
+            em.persist(person);
+            for (Phone phone : person.getPhoneList()) {
+                em.persist(phone);
+            }
             em.getTransaction().commit();
         } finally {
             em.close();
         }
         return new PersonDTO(person);
     }
+
 
     public PersonDTO update(PersonDTO personDTO) {
         EntityManager em = emf.createEntityManager();
@@ -111,12 +148,9 @@ public class PersonFacade {
     public static void main(String[] args) {
         emf = EMF_Creator.createEntityManagerFactory();
         PersonFacade pf = getPersonFacade(emf);
-        List<PersonDTO> list = pf.getAll();
-        System.out.println(list);
-        //create addressdto
-        //create persondto
-        //test the adding methods(addperson + add address)
-        //persist et par test persons
+        PersonDTO person = pf.getPersonByID(1);
+        System.out.println(person.toString());
     }
+
 
 }

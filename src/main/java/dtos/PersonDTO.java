@@ -1,7 +1,6 @@
 package dtos;
 
 import com.google.gson.JsonObject;
-import entities.Hobby;
 import entities.Person;
 import entities.Phone;
 
@@ -14,7 +13,7 @@ public class PersonDTO {
     private String firstName;
     private String lastName;
     private List<HobbyDTO> hobbiesDTOS = new ArrayList<>();
-    private List<Phone> phoneList = new ArrayList<>();
+    private List<PhoneDTO> phoneList = new ArrayList<>();
     private AddressDTO addressDTO;
 
 
@@ -33,8 +32,8 @@ public class PersonDTO {
         this.firstName = person.getFirstName();
         this.lastName = person.getLastName();
         this.addressDTO = new AddressDTO(person.getAddress());
-        for (Hobby h : person.getHobbylist()) {
-            this.hobbiesDTOS.add(new HobbyDTO(h));
+        for (Phone phone : person.getPhoneList()) {
+            this.phoneList.add(new PhoneDTO(phone));
         }
     }
 
@@ -44,16 +43,19 @@ public class PersonDTO {
         return personDTOS;
     }
 
-
+    public void addPhoneDTO(PhoneDTO phoneDTO) {
+        this.phoneList.add(phoneDTO);
+        phoneDTO.setPersonDTO(this);
+    }
     public void setHobbiesDTOS(List<HobbyDTO> hobbiesDTOS) {
         this.hobbiesDTOS = hobbiesDTOS;
     }
 
-    public List<Phone> getPhoneList() {
+    public List<PhoneDTO> getPhoneList() {
         return phoneList;
     }
 
-    public void setPhoneList(List<Phone> phoneList) {
+    public void setPhoneList(List<PhoneDTO> phoneList) {
         this.phoneList = phoneList;
     }
 
@@ -112,20 +114,8 @@ public class PersonDTO {
                 ", lastName='" + lastName + '\'' +
                 ", email='" + email + '\'' +
                 ", hobbies=" + hobbiesDTOS +
+                ", phones=" + phoneList +
+                ", address_dto=" + addressDTO +
                 '}';
-    }
-    public JsonObject toJson() {
-        JsonObject jsonObject = new JsonObject();
-        jsonObject.addProperty("personID", getId());
-        jsonObject.addProperty("email", getEmail());
-        jsonObject.addProperty("firstName", getFirstName());
-        jsonObject.addProperty("lastName", getLastName());
-        jsonObject.addProperty("addressId", getAddressDTO().getId());
-        jsonObject.addProperty("street", getAddressDTO().getStreet());
-        jsonObject.addProperty("additionalInfo", getAddressDTO().getAdditionalInfo());
-        jsonObject.addProperty("cityInfoId", getAddressDTO().getCityInfoDTO().getId());
-        jsonObject.addProperty("zipCode", getAddressDTO().getCityInfoDTO().getZipCode());
-        jsonObject.addProperty("city", getAddressDTO().getCityInfoDTO().getCity());
-        return jsonObject;
     }
 }

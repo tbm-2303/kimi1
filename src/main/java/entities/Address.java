@@ -21,10 +21,8 @@ public class Address {
     @Column(name = "additional_info")
     private String additionalInfo;
 
-
     @OneToMany(mappedBy = "address")
     private List<Person> personList = new ArrayList<>();
-
 
     @ManyToOne
     @JoinColumn(name = "cityinfo_id")
@@ -56,9 +54,7 @@ public class Address {
         return cityInfo;
     }
 
-    public void setCityInfo(CityInfo cityInfo) {
-        this.cityInfo = cityInfo;
-    }
+    public void setCityInfo(CityInfo cityInfo) { this.cityInfo = cityInfo; }
 
     public String getStreet() {
         return street;

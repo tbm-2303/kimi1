@@ -6,19 +6,35 @@ Content-Type: application/json
   "firstName": "jannik",
   "lastName": "sylvester"
 }
+
 ###
 
-POST http://localhost:8080/2_war_exploded/api/person/addpersontest
+POST http://localhost:8080/2_war_exploded/api/person
 Content-Type: application/json
 
+
 {
-  "email": "email",
-  "firstName": "firstName",
-  "lastName": "lastName",
-  "street": "street",
-  "additionalInfo": "additionalInfo",
-  "zipCode": "zipCode",
-  "city": "city"
+  "email": "ole@mail.dk",
+  "firstName": "nicolai",
+  "lastName": "olsen",
+  "addressDTO": {
+    "street": "gefionsparken",
+    "additionalInfo": "19 st.tv.",
+    "cityInfoDTO": {
+      "zipCode": "3000",
+      "city": "helsingør"
+    }
+  },
+  "phoneList": [
+    {
+      "number": "23039349",
+      "description": "nicos tele"
+    }
+  ]
+
 }
 
 ###
+
+GET http://localhost:8080/2_war_exploded/api/person/1
+Content-Type: application/json

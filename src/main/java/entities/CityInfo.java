@@ -70,6 +70,7 @@ public class CityInfo {
     public Long getId() {
         return id;
     }
+
     public void addAddress(Address address) {
         this.addressList.add(address);
         address.setCityInfo(this);
