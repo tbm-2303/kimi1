@@ -83,14 +83,4 @@ public class PersonResourceTest {
         given().when().get("/person").then().statusCode(200);
     }
 
-    //This test assumes the database contains two rows
-    @Test
-    public void testDummyMsg() throws Exception {
-        given()
-                .contentType("application/json")
-                .get("/person/").then()
-                .assertThat()
-                .statusCode(HttpStatus.OK_200.getStatusCode())
-                .body("msg", equalTo("Hello World"));
-    }
 }
