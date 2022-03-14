@@ -77,10 +77,6 @@ public class PersonResourceTest {
         }
     }
 
-    @Test
-    public void testServerIsUp() {
-        System.out.println("Testing is server UP");
-        given().when().get("/person").then().statusCode(200);
-    }
+    
 
 }
