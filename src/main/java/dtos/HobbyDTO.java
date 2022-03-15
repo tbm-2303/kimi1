@@ -10,6 +10,10 @@ public class HobbyDTO {
     private String description;
 
 
+    public HobbyDTO(String name, String description) {
+        this.name = name;
+        this.description = description;
+    }
 
     public HobbyDTO(Hobby hobby) {
         if (hobby.getId() != null) {

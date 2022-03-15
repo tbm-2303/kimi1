@@ -1,15 +1,15 @@
 package facades;
 
-import com.google.gson.JsonObject;
 import dtos.*;
 import entities.*;
 
+import java.util.ArrayList;
 import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.TypedQuery;
 import javax.ws.rs.WebApplicationException;
-//import errorhandling.RenameMeNotFoundException;
+import errorhandling.EntityNotFoundException;
 import utils.EMF_Creator;
 
 public class PersonFacade {
@@ -33,9 +33,11 @@ public class PersonFacade {
         return instance;
     }
 
-    public PersonDTO getPersonByID(long id) { //throws RenameMeNotFoundException {
+    public PersonDTO getPersonByID(long id) throws EntityNotFoundException {
         EntityManager em = emf.createEntityManager();
         Person person = em.find(Person.class, id);
+        if (person == null)
+            throw new EntityNotFoundException("The Person entity with ID: '"+id+"' was not found");
         return new PersonDTO(person);
     }
 
@@ -145,12 +147,51 @@ public class PersonFacade {
         return PersonDTO.convertToDTO(personList);
     }
 
-    public static void main(String[] args) {
+    public PersonDTO getByPhoneNumber(String phoneNumber) throws EntityNotFoundException {
+        EntityManager em = emf.createEntityManager();
+        TypedQuery<Person> typedQuery = em.createQuery("SELECT p FROM Phone ph JOIN ph.person p WHERE ph.number = " + phoneNumber, Person.class);
+        if (typedQuery.getResultList().size() == 0)
+            throw new EntityNotFoundException("The Person entity with phone number: '"+phoneNumber+"' was not found");
+        Person person = typedQuery.getSingleResult();
+        return new PersonDTO(person);
+    }
+
+    public List<PersonDTO> getPersonsWithHobby(long hobbyId) throws EntityNotFoundException {
+        EntityManager em = emf.createEntityManager();
+        TypedQuery<Person> typedQueryPerson = em.createQuery("SELECT p FROM Person p LEFT JOIN p.hobbylist h WHERE h.id=" + hobbyId, Person.class);
+        List<Person> personList = typedQueryPerson.getResultList();
+        List<PersonDTO> personDTOList = new ArrayList<>();
+        for (Person p : personList) {
+            personDTOList.add(new PersonDTO(p));
+        }
+        return personDTOList;
+    }
+
+    public PersonDTO addHobbyToPerson(long id, HobbyDTO hobbyDTO) {
+        EntityManager em = emf.createEntityManager();
+        Person person = em.find(Person.class, id);
+        Hobby hobby = new Hobby(hobbyDTO);
+        person.addHobby(hobby);
+        try {
+            em.getTransaction().begin();
+            em.persist(hobby);
+            em.persist(person);
+            em.getTransaction().commit();
+        } finally {
+            em.close();
+        }
+        return new PersonDTO(person);
+    }
+
+
+    public static void main(String[] args) throws EntityNotFoundException {
         emf = EMF_Creator.createEntityManagerFactory();
         PersonFacade pf = getPersonFacade(emf);
-        PersonDTO person = pf.getPersonByID(1);
-        System.out.println(person.toString());
+        PersonDTO persondto = pf.getByPhoneNumber("91405485");
+        System.out.println(persondto.toString());
+
     }
+
 
 
 }

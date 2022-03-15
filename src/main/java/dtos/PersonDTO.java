@@ -115,7 +115,9 @@ public class PersonDTO {
                 ", email='" + email + '\'' +
                 ", hobbies=" + hobbiesDTOS +
                 ", phones=" + phoneList +
-                ", address_dto=" + addressDTO +
+                ", street=" + addressDTO.getStreet() +
+                ", address info=" + addressDTO.getAdditionalInfo() +
+                ", street=" + addressDTO.getStreet() +
                 '}';
     }
 }
