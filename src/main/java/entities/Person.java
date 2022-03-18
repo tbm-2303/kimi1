@@ -125,5 +125,8 @@ public class Person {
         this.phoneList.add(phone);
         phone.setPerson(this);
     }
+    public void removeAddress(){
+        this.address = null;
+    }
 
 }

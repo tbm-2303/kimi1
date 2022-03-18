@@ -75,4 +75,9 @@ public class CityInfo {
         this.addressList.add(address);
         address.setCityInfo(this);
     }
+    public void removeAddress(Address address){
+        addressList.remove(address);
+        address.setCityInfo(null);
+    }
+
 }

@@ -14,24 +14,23 @@ Content-Type: application/json
 
 
 {
-  "email": "ole@mail.dk",
-  "firstName": "nicolai",
-  "lastName": "olsen",
+  "email": "jam@hotmail.com",
+  "firstName": "james",
+  "lastName": "mortensen",
   "addressDTO": {
     "street": "gefionsparken",
     "additionalInfo": "19 st.tv.",
     "cityInfoDTO": {
       "zipCode": "3000",
-      "city": "helsingør"
+      "city": "Helsingør"
     }
   },
   "phoneList": [
     {
-      "number": "23039349",
-      "description": "nicos tele"
+      "number": "12321232",
+      "description": "james tele"
     }
   ]
-
 }
 
 ###
@@ -58,3 +57,33 @@ Content-Type: application/json
 "name": "dota2",
 "description": "pc spil"
 }
+
+
+###
+
+PUT http://localhost:8080/2_war_exploded/api/person/1
+Content-Type: application/json
+
+{
+  "email": "alfonso@gmail.com",
+  "firstName": "alfonso",
+  "lastName": "enrique",
+
+  "addressDTO": {
+    "street": "gg",
+    "additionalInfo": "gg",
+    "cityInfoDTO": {
+      "zipCode": "3050",
+      "city": "Humlebæk"
+    }
+  },
+  "phoneList": [
+    {
+      "number": "49191225",
+      "description": "asdd"
+    }
+  ]
+}
+
+###
+POST  http://localhost:8080/2_war_exploded/api/person/addhobby/1/9

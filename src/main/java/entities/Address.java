@@ -50,6 +50,11 @@ public class Address {
         person.setAddress(this);
     }
 
+    public void removePerson(Person person){
+        personList.remove(person);
+        person.removeAddress();
+    }
+
     public CityInfo getCityInfo() {
         return cityInfo;
     }

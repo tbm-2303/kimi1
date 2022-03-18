@@ -1,6 +1,7 @@
 package dtos;
 
 import com.google.gson.JsonObject;
+import entities.Hobby;
 import entities.Person;
 import entities.Phone;
 
@@ -34,6 +35,9 @@ public class PersonDTO {
         this.addressDTO = new AddressDTO(person.getAddress());
         for (Phone phone : person.getPhoneList()) {
             this.phoneList.add(new PhoneDTO(phone));
+        }
+        for (Hobby h : person.getHobbylist()) {
+            this.hobbiesDTOS.add(new HobbyDTO(h));
         }
     }
 

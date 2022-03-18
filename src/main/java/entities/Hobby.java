@@ -18,8 +18,15 @@ public class Hobby {
     @Column(name = "name")
     private String name;
 
-    @Column(name = "description")
-    private String description;
+
+    @Column(name = "wikiLink")
+    private String wikiLink;
+
+    @Column(name = "category")
+    private String category;
+
+    @Column(name = "type")
+    private String type;
 
     @ManyToMany(mappedBy = "hobbylist")
     private List<Person> persons = new ArrayList<>();
@@ -28,19 +35,24 @@ public class Hobby {
     }
 
 
-    public Hobby(String name, String description) {
+    public Hobby(String name, String wikiLink, String category, String type) {
         this.name = name;
-        this.description = description;
+        this.wikiLink = wikiLink;
+        this.category = category;
+        this.type = type;
     }
 
     public Hobby(HobbyDTO hobbyDTO) {
         this.name = hobbyDTO.getName();
-        this.description = hobbyDTO.getDescription();
+        this.wikiLink = hobbyDTO.getWikiLink();
+        this.category = hobbyDTO.getCategory();
+        this.type = hobbyDTO.getType();
     }
 
     public void addPersons(Person person) {
         this.persons.add(person);
     }
+
 
     public String getName() {
         return name;
@@ -50,12 +62,28 @@ public class Hobby {
         this.name = name;
     }
 
-    public String getDescription() {
-        return description;
+    public String getWikiLink() {
+        return wikiLink;
     }
 
-    public void setDescription(String description) {
-        this.description = description;
+    public void setWikiLink(String wikiLink) {
+        this.wikiLink = wikiLink;
+    }
+
+    public String getCategory() {
+        return category;
+    }
+
+    public void setCategory(String category) {
+        this.category = category;
+    }
+
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
     }
 
     public Long getId() {
@@ -74,13 +102,6 @@ public class Hobby {
         this.persons = persons;
     }
 
-    @Override
-    public String toString() {
-        return "Hobby{" +
-                "id=" + id +
-                ", name='" + name + '\'' +
-                ", description='" + description + '\'' +
-                ", persons=" + persons +
-                '}';
-    }
+
 }
+

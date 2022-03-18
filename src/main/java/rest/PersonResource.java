@@ -54,7 +54,7 @@ public class PersonResource {
         return Response.ok().entity(GSON.toJson(personDTO)).build();
     }
 
-
+    //**!1!**
     //get person by phone
     @Path("phone/{number}")
     @GET
@@ -65,22 +65,25 @@ public class PersonResource {
         return Response.ok().entity(GSON.toJson(personDTO)).build();
     }
     // Get all persons with a given hobby ID
-    @Path("hobby/{id}")
+    @Path("allhobby/{id}")
     @GET
     @Produces({MediaType.APPLICATION_JSON})
     public Response getPersonsWithHobby(@PathParam("id") long id) throws EntityNotFoundException {
         List<PersonDTO> personsWithHobby = FACADE.getPersonsWithHobby(id);
         return Response.ok().entity(GSON.toJson(personsWithHobby)).build();
     }
-    //update person
+    //update person by id
+    @Path("{id}")
     @PUT
     @Produces({MediaType.APPLICATION_JSON})
     @Consumes({MediaType.APPLICATION_JSON})
-    public String update(String person) {
-        PersonDTO newPersonDTO = GSON.fromJson(person, PersonDTO.class);
-        PersonDTO updatedPersonDTO = FACADE.update(newPersonDTO);
-        return GSON.toJson(updatedPersonDTO);
+    public Response update(@PathParam("id") long id, String person) {
+        PersonDTO personDTO = GSON.fromJson(person, PersonDTO.class);
+        personDTO.setId(id);
+        PersonDTO updatePersonDTO = FACADE.update(personDTO);
+        return Response.ok().entity(GSON.toJson(updatePersonDTO)).build();
     }
+
 
     //create new person
     @POST
@@ -113,6 +116,15 @@ public class PersonResource {
         return Response.ok().entity(GSON.toJson(person)).build();
     }
 
+    //add hobby to person
+    @Path("addhobby/{person_id}/{hobby_id}")
+    @POST
+    @Produces("application/json")
+    @Consumes("application/json")
+    public Response addHobbyToPersonByIds(@PathParam("person_id") long person_id, @PathParam("hobby_id") long hobby_id) {
+        PersonDTO person = FACADE.addHobbyToPersonByIds(person_id, hobby_id);
+        return Response.ok().entity(GSON.toJson(person)).build();
+    }
 }
 /*
 // Get all info from a person by person ID

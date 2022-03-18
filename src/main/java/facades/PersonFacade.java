@@ -9,6 +9,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.TypedQuery;
 import javax.ws.rs.WebApplicationException;
+
 import errorhandling.EntityNotFoundException;
 import utils.EMF_Creator;
 
@@ -37,7 +38,7 @@ public class PersonFacade {
         EntityManager em = emf.createEntityManager();
         Person person = em.find(Person.class, id);
         if (person == null)
-            throw new EntityNotFoundException("The Person entity with ID: '"+id+"' was not found");
+            throw new EntityNotFoundException("The Person entity with ID: '" + id + "' was not found");
         return new PersonDTO(person);
     }
 
@@ -60,21 +61,9 @@ public class PersonFacade {
         }
         return null;
     }
-    public void linkHobbyPerson(PersonDTO p, HobbyDTO h){
-        EntityManager em = emf.createEntityManager();
-        Person person = new Person(p);
-        Hobby hobby = new Hobby(h);
-        person.addHobby(hobby);
-        try {
-            em.getTransaction().begin();
-            em.persist(person);
-            em.getTransaction().commit();
-        } finally {
-            em.close();
-        }
-    }
 
-    public HobbyDTO createHobby(HobbyDTO hobbyDTO){
+
+    public HobbyDTO createHobby(HobbyDTO hobbyDTO) {
         EntityManager em = emf.createEntityManager();
         Hobby hobby = new Hobby(hobbyDTO);
         try {
@@ -112,24 +101,59 @@ public class PersonFacade {
         return new PersonDTO(person);
     }
 
+    public boolean sameAddress(PersonDTO personDTO, Address address) {
+        return personDTO.getAddressDTO().getStreet().equals(address.getStreet()) && personDTO.getAddressDTO().getAdditionalInfo().equals(address.getAdditionalInfo());
+    }
+
+    public AddressDTO getOrCreate(AddressDTO addressDTO) {
+        EntityManager em = emf.createEntityManager();
+        TypedQuery<Address> query = em.createQuery(
+                "SELECT a FROM Address a, CityInfo c " +
+                        "WHERE a.street = " +
+                        " '" + addressDTO.getStreet() + "' " +
+                        "and a.additionalInfo = " +
+                        " '" + addressDTO.getAdditionalInfo() + "' " +
+                        "and c.zipCode = " +
+                        " '" + addressDTO.getCityInfoDTO().getZipCode() + "' ", Address.class);
+
+        List<Address> addressList = query.getResultList();
+        if (addressList.isEmpty()) {
+            return addressDTO;
+        }
+        return new AddressDTO(addressList.get(0));
+    }
 
     public PersonDTO update(PersonDTO personDTO) {
         EntityManager em = emf.createEntityManager();
-        Person newPerson = new Person(personDTO);
-        //Remember to make relations in the new person.
-        //Also remember to get a ref to the old person. Then edit all the relations to the old person.
-        //Then merge
+        Person person = em.find(Person.class, personDTO.getId());//person som vi gerne vil opdatere
+        Address address = person.getAddress();
+        CityInfo cityInfo = person.getAddress().getCityInfo();
+        CityInfo c = em.find(CityInfo.class, personDTO.getAddressDTO().getCityInfoDTO().getId());//find city object som matcher med input
+        //opdater person
+        person.setEmail(personDTO.getEmail());
+        person.setFirstName(personDTO.getFirstName());
+        person.setLastName(personDTO.getLastName());
+//opdater addresse
+        if (!sameAddress(personDTO, address)) {
+            address.setStreet(personDTO.getAddressDTO().getStreet());//add new data
+            address.setAdditionalInfo(personDTO.getAddressDTO().getAdditionalInfo());//add new data
+            address.setCityInfo(c);
+            //c.addAddress(address);
+        }
+        //hobby and phone stuff but just check if address works first
+        //
         try {
             em.getTransaction().begin();
-            em.merge(newPerson);
+            em.merge(cityInfo);
+            em.merge(address);
+            em.merge(person);
             em.getTransaction().commit();
-            return new PersonDTO(newPerson);
-        } catch (Exception e) {
-            throw new WebApplicationException("Transaction failed", 500);
         } finally {
             em.close();
         }
+        return new PersonDTO(person);
     }
+
 
     public RenameMeDTO getById(long id) { //throws RenameMeNotFoundException {
         EntityManager em = emf.createEntityManager();
@@ -147,16 +171,18 @@ public class PersonFacade {
         return PersonDTO.convertToDTO(personList);
     }
 
+    //1
     public PersonDTO getByPhoneNumber(String phoneNumber) throws EntityNotFoundException {
         EntityManager em = emf.createEntityManager();
         TypedQuery<Person> typedQuery = em.createQuery("SELECT p FROM Phone ph JOIN ph.person p WHERE ph.number = " + phoneNumber, Person.class);
         if (typedQuery.getResultList().size() == 0)
-            throw new EntityNotFoundException("The Person entity with phone number: '"+phoneNumber+"' was not found");
+            throw new EntityNotFoundException("The Person entity with phone number: '" + phoneNumber + "' was not found");
         Person person = typedQuery.getSingleResult();
         return new PersonDTO(person);
     }
 
-    public List<PersonDTO> getPersonsWithHobby(long hobbyId) throws EntityNotFoundException {
+    //2
+    public List<PersonDTO> getPersonsWithHobby(long hobbyId) {
         EntityManager em = emf.createEntityManager();
         TypedQuery<Person> typedQueryPerson = em.createQuery("SELECT p FROM Person p LEFT JOIN p.hobbylist h WHERE h.id=" + hobbyId, Person.class);
         List<Person> personList = typedQueryPerson.getResultList();
@@ -183,12 +209,26 @@ public class PersonFacade {
         return new PersonDTO(person);
     }
 
+    public PersonDTO addHobbyToPersonByIds(long person_id, long hobby_id) {
+        EntityManager em = emf.createEntityManager();
+        Person person = em.find(Person.class, person_id);
+        Hobby hobby = em.find(Hobby.class, hobby_id);
+        person.addHobby(hobby);
+        try {
+            em.getTransaction().begin();
+            em.persist(hobby);
+            em.persist(person);
+            em.getTransaction().commit();
+        } finally {
+            em.close();
+        }
+        return new PersonDTO(person);
+    }
 
     public static void main(String[] args) throws EntityNotFoundException {
         emf = EMF_Creator.createEntityManagerFactory();
         PersonFacade pf = getPersonFacade(emf);
-        PersonDTO persondto = pf.getByPhoneNumber("91405485");
-        System.out.println(persondto.toString());
+
 
     }
 
